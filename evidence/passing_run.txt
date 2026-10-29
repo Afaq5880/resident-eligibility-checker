@@ -1,0 +1,32 @@
+USING RUNNER: behave.runner:Runner
+Feature: Resident Support eligibility checking # features/eligibility.feature:1
+  As a Resident Support service manager
+  I want eligibility decisions to be applied consistently and validated
+  So that residents receive fair, auditable outcomes and bad data is caught early
+  Scenario: Eligible adult resident on a low income             # features/eligibility.feature:17
+    Given an applicant aged 35                                  # features/steps/eligibility_steps.py:16
+    And the applicant is a resident of the local authority area # features/steps/eligibility_steps.py:21
+    And the applicant has a household income of 24000           # features/steps/eligibility_steps.py:31
+    When the eligibility check is run                           # features/steps/eligibility_steps.py:38
+    Then the applicant should be eligible                       # features/steps/eligibility_steps.py:53
+
+  Scenario: Boundary applicant exactly on the age and income limits  # features/eligibility.feature:24
+    Given an applicant aged 18                                       # features/steps/eligibility_steps.py:16
+    And the applicant is a resident of the local authority area      # features/steps/eligibility_steps.py:21
+    And the applicant has a household income of 30000                # features/steps/eligibility_steps.py:31
+    When the eligibility check is run                                # features/steps/eligibility_steps.py:38
+    Then the applicant should be not eligible                        # features/steps/eligibility_steps.py:62
+    And the reason should mention the income threshold               # features/steps/eligibility_steps.py:71
+
+  Scenario: Invalid input is rejected gracefully                # features/eligibility.feature:32
+    Given an applicant aged 40                                  # features/steps/eligibility_steps.py:16
+    And the applicant is a resident of the local authority area # features/steps/eligibility_steps.py:21
+    And the applicant has a household income of -500            # features/steps/eligibility_steps.py:31
+    When the eligibility check is run                           # features/steps/eligibility_steps.py:38
+    Then the service should report an input error               # features/steps/eligibility_steps.py:79
+    And the error message should mention "negative"             # features/steps/eligibility_steps.py:87
+
+1 feature passed, 0 failed, 0 skipped
+3 scenarios passed, 0 failed, 0 skipped
+17 steps passed, 0 failed, 0 skipped
+Took 0min 0.015s

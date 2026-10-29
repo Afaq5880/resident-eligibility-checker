@@ -1,0 +1,20 @@
+USING RUNNER: behave.runner:Runner
+Feature: Deliberate failure demonstration (temporary) # features/temp_deliberate_failure.feature:1
+  Temporary file used only to capture evidence of an unsuccessful run.
+  Scenario: High-income applicant wrongly expected to be eligible  # features/temp_deliberate_failure.feature:4
+    Given an applicant aged 35                                     # features/steps/eligibility_steps.py:16
+    And the applicant is a resident of the local authority area    # features/steps/eligibility_steps.py:21
+    And the applicant has a household income of 50000              # features/steps/eligibility_steps.py:31
+    When the eligibility check is run                              # features/steps/eligibility_steps.py:38
+    Then the applicant should be eligible                          # features/steps/eligibility_steps.py:53
+      ASSERT FAILED: Expected the applicant to be eligible, but got: NOT ELIGIBLE: Not eligible because household income must be below GBP 30,000.
+
+
+
+Failing scenarios:
+  features/temp_deliberate_failure.feature:4  High-income applicant wrongly expected to be eligible
+
+0 features passed, 1 failed, 0 skipped
+0 scenarios passed, 1 failed, 0 skipped
+4 steps passed, 1 failed, 0 skipped
+Took 0min 0.007s
